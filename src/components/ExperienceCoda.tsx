@@ -81,9 +81,14 @@ function applyLineReveal(lineEls: NodeListOf<HTMLElement>, progress: number) {
   });
 }
 
-function CodaLink() {
+function CodaLink({ decorative = false }: { decorative?: boolean }) {
   return (
-    <Link href="/#contact" className="experience-coda-link">
+    <Link
+      href="/#contact"
+      className="experience-coda-link"
+      tabIndex={decorative ? -1 : undefined}
+      aria-hidden={decorative || undefined}
+    >
       {[...CODA_LINK].map((ch, i) => (
         <span
           key={i}
@@ -107,7 +112,7 @@ function CodaWordSpan({ word }: { word: CodaWord }) {
 
 export default function ExperienceCoda() {
   const rootRef = useRef<HTMLElement>(null);
-  const typeRef = useRef<HTMLSpanElement>(null);
+  const typeRef = useRef<HTMLDivElement>(null);
   const wordRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const linkWrapRef = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
@@ -215,12 +220,12 @@ export default function ExperienceCoda() {
       className={`experience-coda${visible ? " experience-coda--visible" : ""}`}
     >
       <p className="experience-coda-lead">But there&apos;s more...</p>
-      <p className={bodyClass}>
-        <span className="sr-only">
+      <div className={bodyClass}>
+        <p className="sr-only">
           {CODA_BODY}
-          {CODA_LINK}
-        </span>
-        <span
+          <Link href="/#contact">Reach out.</Link>
+        </p>
+        <div
           ref={typeRef}
           className={`experience-coda-type${lines ? "" : " experience-coda-type--measure"}`}
           aria-hidden="true"
@@ -231,7 +236,7 @@ export default function ExperienceCoda() {
                 {line.words.map((word, wordIndex) => (
                   <CodaWordSpan key={wordIndex} word={word} />
                 ))}
-                {line.hasLink ? <CodaLink /> : null}
+                {line.hasLink ? <CodaLink decorative /> : null}
               </span>
             ))
           ) : (
@@ -248,12 +253,12 @@ export default function ExperienceCoda() {
                 </span>
               ))}
               <span ref={linkWrapRef} className="experience-coda-word">
-                <CodaLink />
+                <CodaLink decorative />
               </span>
             </>
           )}
-        </span>
-      </p>
+        </div>
+      </div>
     </aside>
   );
 }

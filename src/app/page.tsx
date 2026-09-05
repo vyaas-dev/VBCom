@@ -133,8 +133,9 @@ export default function Home() {
           <h1
             ref={titleRef}
             className="name-mark leading-none tracking-[-0.02em] text-white"
+            aria-label="Vyaas Baskar"
           >
-            <span className="name-mark-base">
+            <span className="name-mark-base" aria-hidden="true">
               <NameLines />
             </span>
             <span
