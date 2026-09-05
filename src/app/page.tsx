@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useRouter } from "next/navigation";
 import NeuralNet from "@/components/NeuralNet";
 
 function NameLines() {
@@ -14,8 +15,10 @@ function NameLines() {
 }
 
 export default function Home() {
+  const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const glowRef = useRef<HTMLSpanElement>(null);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     const title = titleRef.current;
@@ -100,8 +103,29 @@ export default function Home() {
     };
   }, []);
 
+  const goToExperience = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (leaving) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion) {
+      router.push("/experience");
+      return;
+    }
+
+    setLeaving(true);
+    window.setTimeout(() => {
+      router.push("/experience");
+    }, 450);
+  };
+
   return (
-    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-black">
+    <div
+      className={`relative flex min-h-full flex-1 flex-col overflow-hidden bg-black${leaving ? " page-leaving" : ""}`}
+    >
       <NeuralNet />
       <div className="net-dim" aria-hidden="true" />
       <main className="relative z-10 flex flex-1">
@@ -122,7 +146,9 @@ export default function Home() {
             </span>
           </h1>
           <nav className="site-nav" aria-label="Primary">
-            <a href="#experience">Experience</a>
+            <a href="/experience" onClick={goToExperience}>
+              Experience
+            </a>
             <a href="#projects">Projects</a>
             <a href="#contact" className="nav-contact">
               Contact

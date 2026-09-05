@@ -6,6 +6,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
   weight: ["600", "700"],
+  style: ["normal", "italic"],
 });
 
 const gloock = Gloock({
