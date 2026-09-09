@@ -8,6 +8,7 @@ type Entry = {
   title: string;
   detail?: string;
   years?: string;
+  note?: string;
 };
 
 type Section = {
@@ -31,39 +32,52 @@ const SECTIONS: Section[] = [
     school: "Lynbrook High School · 2022 — 2026",
     entries: [
       {
-        title: "The Funky Monkeys (Lynbrook Robotics)",
-        detail: "President",
-        years: "2022 — 2026",
+        title: "The Funky Monkeys (FRC 846)",
+        detail: "President · FIRST Dean’s List Semifinalist",
+        years: "2023 — Present",
+        note: "Lead a 50+ member team after Software & Controls Lead and Test & Drive Lead. Event wins, Innovation in Control, and Engineering Inspiration along the way.",
       },
       {
-        title: "Medical Robotics",
-        detail: "Research under Dr. Sohail H Zaidi, SJSU",
-        years: "2023 — 2026",
+        title: "Medical Robotics Research",
+        detail: "San José State University · Dr. Sohail H. Zaidi",
+        years: "2023 — Present",
+        note: "Control systems and computer vision for robotic arms in medical settings. Presented at NCUR, IEEE ISEC, IMECE, and more.",
       },
       {
-        title: "Team Hippocampus",
-        detail: "President and Founder",
-        years: "2023 — 2026",
+        title: "VEX AI 1001A (Team Hippocampus)",
+        detail: "Founder and President",
+        years: "2023 — Present",
+        note: "Fully autonomous robots with high-accuracy detection and mostly 3D-printed builds. 2× World Championships · Judges’ Award and Build Award.",
       },
       {
         title: "STEMist Education",
-        detail: "Volunteer and Instructor",
-        years: "2022 — 2026",
+        detail: "Director of Technology, Volunteer, and Instructor",
+        years: "2022 — Present",
+        note: "Led an international 8-person tech team for the site and apps, and teach physics, math, and CS workshops.",
+      },
+      {
+        title: "Science Olympiad — Team A",
+        detail: "55+ medals across 25+ competitions",
+        years: "2019 — Present",
+        note: "State and regional firsts across more than 25 competitions.",
+      },
+      {
+        title: "FIRST Lego League & Calabazas Library",
+        detail: "Mentor and Volunteer",
+        years: "2022 — Present",
+        note: "Started two FLL teams I still mentor, and taught Lego Robotics to 60+ students over 12 weeks at Calabazas Library.",
       },
       {
         title: "VTSeva",
-        detail: "Making books accessible to blind readers",
-        years: "2023 — Present",
-      },
-      {
-        title: "Science Olympiad",
-        detail: "50+ medals, 4× Top 25 National MYSO",
-        years: "2019 — 2026",
+        detail: "Volunteer",
+        years: "2022 — Present",
+        note: "Convert educational resources so visually impaired students in India can use them in school.",
       },
       {
         title: "National Honor Society, LHS Chapter",
         detail: "Volunteer and Tutor",
-        years: "2024 — 2026",
+        years: "2024 — Present",
+        note: "Tutor peers in physics, math, and computer science.",
       },
     ],
   },
@@ -130,6 +144,9 @@ export default function ExperiencePage() {
                       <h2 className="timeline-role">{entry.title}</h2>
                       {entry.detail ? (
                         <p className="timeline-org">{entry.detail}</p>
+                      ) : null}
+                      {entry.note ? (
+                        <p className="timeline-note">{entry.note}</p>
                       ) : null}
                     </div>
                   </li>

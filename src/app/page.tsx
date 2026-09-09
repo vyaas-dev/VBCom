@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import NeuralNet from "@/components/NeuralNet";
+import ContactGate from "@/components/ContactGate";
+import { useClickIntentMagnet } from "@/hooks/useClickIntentMagnet";
 
 function NameLines() {
   return (
@@ -18,7 +20,11 @@ export default function Home() {
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const glowRef = useRef<HTMLSpanElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const [leaving, setLeaving] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+
+  useClickIntentMagnet(navRef, !leaving && !contactOpen);
 
   useEffect(() => {
     const title = titleRef.current;
@@ -103,6 +109,38 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const syncHash = () => {
+      setContactOpen(window.location.hash === "#contact");
+    };
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, []);
+
+  const closeContact = () => {
+    setContactOpen(false);
+    if (window.location.hash === "#contact") {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`,
+      );
+    }
+  };
+
+  const openContact = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setContactOpen(true);
+    if (window.location.hash !== "#contact") {
+      window.history.pushState(null, "", "#contact");
+    }
+  };
+
   const goToExperience = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (leaving) return;
@@ -146,32 +184,41 @@ export default function Home() {
               <NameLines />
             </span>
           </h1>
-          <nav className="site-nav" aria-label="Primary">
-            <a href="/experience" onClick={goToExperience}>
-              Experience
+          <nav ref={navRef} className="site-nav" aria-label="Primary">
+            <a href="/experience" data-magnetic onClick={goToExperience}>
+              <span className="magnetic-face" data-magnetic-face>
+                Experience
+              </span>
             </a>
-            <a href="#projects">Projects</a>
-            <a href="#contact" className="nav-contact">
-              Contact
-              <svg
-                className="nav-send-icon"
-                viewBox="0 0 24 24"
-                width="1em"
-                height="1em"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 2L11 13" />
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-              </svg>
+            <a
+              href="#contact"
+              className="nav-contact"
+              data-magnetic
+              onClick={openContact}
+            >
+              <span className="magnetic-face" data-magnetic-face>
+                Contact
+                <svg
+                  className="nav-send-icon"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  height="1em"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M22 2L11 13" />
+                  <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+                </svg>
+              </span>
             </a>
           </nav>
         </div>
       </main>
+      <ContactGate open={contactOpen} onClose={closeContact} />
     </div>
   );
 }
